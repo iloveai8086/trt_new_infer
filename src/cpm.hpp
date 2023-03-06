@@ -80,7 +80,7 @@ public:
   }
 
   template <typename LoadMethod>
-  bool start(const LoadMethod &loadmethod, int max_items_processed = 1,
+  bool start(const LoadMethod &loadmethod, int max_items_processed = 1,  // max_items_processed 就是 maxbatch
              void *stream = nullptr) {
 
     stop();

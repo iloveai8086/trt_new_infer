@@ -353,7 +353,7 @@ public:
   }
 
   virtual std::vector<int> run_dims(int ibinding) override {
-    auto dim = this->context_->context_->getBindingDimensions(ibinding);
+    auto dim = this->context_->context_->getBindingDimensions(ibinding);  // 一个是context的getBindingDimensions
     return std::vector<int>(dim.d, dim.d + dim.nbDims);
   }
 
@@ -362,7 +362,7 @@ public:
   }
 
   virtual std::vector<int> static_dims(int ibinding) override {
-    auto dim = this->context_->engine_->getBindingDimensions(ibinding);
+    auto dim = this->context_->engine_->getBindingDimensions(ibinding);  // 一个是engine的getBindingDimensions
     return std::vector<int>(dim.d, dim.d + dim.nbDims);
   }
 

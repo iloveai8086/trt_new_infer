@@ -605,7 +605,7 @@ public:
 
   virtual BoxArray forward(const Image &image,
                            void *stream = nullptr) override {
-    auto output = forwards({image}, stream);
+    auto output = forwards({image}, stream);  // 里面还是调用的forwards
     if (output.empty())
       return {};
     return output[0];
@@ -624,7 +624,7 @@ public:
       if (isdynamic_model_) {
         infer_batch_size = num_image;
         input_dims[0] = num_image;
-        if (!trt_->set_run_dims(0, input_dims))
+        if (!trt_->set_run_dims(0, input_dims))  // 根据你的batch set_run_dims，动态batch，静态batch的set就是无效的
           return {};
       } else {
         if (infer_batch_size < num_image) {
@@ -635,7 +635,7 @@ public:
         }
       }
     }
-    adjust_memory(infer_batch_size);
+    adjust_memory(infer_batch_size);  // 调整内存
 
     vector<AffineMatrix> affine_matrixs(num_image);
     cudaStream_t stream_ = (cudaStream_t)stream;
@@ -667,7 +667,7 @@ public:
                             num_classes_, bbox_head_dims_[2],
                             confidence_threshold_, nms_threshold_,
                             affine_matrix_device, boxarray_device,
-                            MAX_IMAGE_BOXES, type_, stream_);
+                            MAX_IMAGE_BOXES, type_, stream_);  // decode + fast nms
     }
     checkRuntime(cudaMemcpyAsync(output_boxarray_.cpu(), output_boxarray_.gpu(),
                                  output_boxarray_.gpu_bytes(),
