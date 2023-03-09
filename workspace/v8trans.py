@@ -3,6 +3,26 @@ import onnx.helper as helper
 import sys
 import os
 
+"""
+
+1,116,8400这个shape
+116 -> cx,cy,w,h,80class conf,32mask weight
+8400 -> 3个层 grid
+
+infer 需要喂 （1，n，116），所以需要transpose一下
+
+mask 32*160*160
+32个160*160的概率图 prob map
+还不是二值图
+怎么变成instance的图，通过 对每一个box而言的cx,cy,w,h: sigmoid(sum(32weight -> *[32x160x160的图，一个图一个weight],dim=0))
+32个weight 乘以32x160x160的图
+还需要在32 维度上 累加；累加完了就变成了160*160了；乘完的结果做个sigmoid；就是变成了概率图了；prob map
+有了prob map 就能用框crop了，最终crop出来的结果就是mask了
+mask = crop([cx,cy,w,h],sigmoid(sum(32weight -> *[32x160x160的图，一个图一个weight],dim=0))
+32就是mask dim
+
+
+"""
 def main():
 
     if len(sys.argv) < 2:

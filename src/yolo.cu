@@ -611,7 +611,7 @@ public:
     return output[0];
   }
 
-  virtual vector<BoxArray> forwards(const vector<Image> &images,
+  virtual vector<BoxArray> forwards(const vector<Image> &images,  // 提供n张图
                                     void *stream = nullptr) override {
 
     int num_image = images.size();
@@ -621,13 +621,13 @@ public:
     auto input_dims = trt_->static_dims(0);
     int infer_batch_size = input_dims[0];
     if (infer_batch_size != num_image) {
-      if (isdynamic_model_) {
-        infer_batch_size = num_image;
+      if (isdynamic_model_) {  // 看你是不是dynamic的model，设置rundim，实际bs赋值到输入，告诉trt实际bs多大
+        infer_batch_size = num_image;  // 动态的话，你十张图，直接set一下就行，不超过max就行
         input_dims[0] = num_image;
         if (!trt_->set_run_dims(0, input_dims))  // 根据你的batch set_run_dims，动态batch，静态batch的set就是无效的
           return {};
       } else {
-        if (infer_batch_size < num_image) {
+        if (infer_batch_size < num_image) {  // 对不同的batch处理；静态的时候，bs=1，现在十张图，肯定不能推理，报错
           INFO("When using static shape model, number of images[%d] must be "
                "less than or equal to the maximum batch[%d].",
                num_image, infer_batch_size);

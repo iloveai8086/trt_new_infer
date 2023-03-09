@@ -11,6 +11,8 @@ workspace/pro
 *.engine
 .kiwi
 objs
+*.onnx
+workspace/*.jpg
 
 # Precompiled Headers
 *.gch

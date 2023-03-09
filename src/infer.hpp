@@ -85,14 +85,23 @@ public:
                        void *stream = nullptr,
                        void *input_consum_event = nullptr) = 0;
   virtual int index(const std::string &name) = 0;
+  // run_dims 对应 ExcutionContext-> binding dim
+  // ExcutionContext相当于把engine启动起来的效果，想象成windows下面的，启动exe后的进程
   virtual std::vector<int> run_dims(const std::string &name) = 0;
   virtual std::vector<int> run_dims(int ibinding) = 0;
+  // static_dims 对应 engine -> binding dim
+  // engine对应与你的onnx编译为trtengine那个静态的引擎；engine想象成onnx，没有被启动起来的
+  // exe应用程序具体的文件
+  // 维度有什么区别：static_dimsengine（onnx的dim）；
+  // ！！！最主要的区别，静态的时候可以有不确定的shape，一般不确定的用英文表示；
+  // ExcutionContext，rundim属于运行时的状态，必须明确每一个维度；执行的时候还不行，是不行的；
   virtual std::vector<int> static_dims(const std::string &name) = 0;
   virtual std::vector<int> static_dims(int ibinding) = 0;
   virtual int numel(const std::string &name) = 0;
   virtual int numel(int ibinding) = 0;
   virtual int num_bindings() = 0;
   virtual bool is_input(int ibinding) = 0;
+  // 你静态的维度不确定，你希望他确定，那么通过set_run_dims来确定每一个维度
   virtual bool set_run_dims(const std::string &name,
                             const std::vector<int> &dims) = 0;
   virtual bool set_run_dims(int ibinding, const std::vector<int> &dims) = 0;
